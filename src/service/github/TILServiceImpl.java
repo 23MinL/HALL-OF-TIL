@@ -10,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -33,11 +34,18 @@ public class TILServiceImpl implements TILService {
 //                    logger.info(response.body());
                 Pattern pattern = Pattern.compile("\"body\":\"(.*?)\",\""); // 수정된 정규 표현식 (최소 매칭)
                 Matcher matcher = pattern.matcher(response.body());
+                List<TIL> tils = new ArrayList<>();
                 while (matcher.find()) {
-                    logger.info(matcher.group(1));
+//                    logger.info(matcher.group(1));
+                    tils.add(new TIL(
+                            repo.name(),
+                            repo.link(),
+                            repo.name() + "의 TIL",
+                            matcher.group(1),
+                            new Date().toString()
+                    ));
                 }
-
-                break;
+                return tils;
             case VELOG:
             case TISTORY:
                 throw new Exception("지원하지 않는 종류");
